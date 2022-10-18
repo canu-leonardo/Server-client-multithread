@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class MultiServer{
     private static ArrayList<Socket> listaSocket = new ArrayList<>();
-    private static ArrayList<Thread> listaThread = new ArrayList<>();
+    private static ArrayList<ServerThread> listaThread = new ArrayList<>();
     private static ServerSocket serverSocket;
 
     public void avvia(){
@@ -22,14 +22,14 @@ public class MultiServer{
                 listaThread.add(serverThread);
                 serverThread.start();
                 System.out.println();
-            }while(ServerThread.attivo);
+            }while(/*ServerThread.attivo*/ true);
         } catch (Exception e) {
             System.out.println("SERVER SPENTO");
         }
     }
 
     static void SpegniServer(){
-        for (int i = 0; i < listaThread.size(); i++){
+        for (int i = 0; i < listaSocket.size(); i++){
             try {
                 listaSocket.get(i).close();
             } catch (IOException e) {
@@ -37,6 +37,7 @@ public class MultiServer{
             }
         }
         for (int i = 0; i < listaThread.size(); i++){
+            listaThread.get(i).messagioVeloce();
             listaThread.get(i).interrupt();
         }
         try {

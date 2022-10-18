@@ -2,6 +2,7 @@ package it.fi.meucci;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -13,7 +14,7 @@ public class ServerThread extends Thread{
     String stringaModificata = null;
     BufferedReader inDalClient;
     DataOutputStream outVersoIlClient;
-    static boolean attivo = true;
+    //static boolean attivo = true;
 
     public ServerThread (Socket socket){
         this.client = socket;
@@ -23,7 +24,7 @@ public class ServerThread extends Thread{
         try {
             comunica();
         } catch (Exception e) {
-            // TODO: handle exception
+            System.out.println(e.getMessage());
         }
     }
 
@@ -33,11 +34,11 @@ public class ServerThread extends Thread{
 
         for (;;){
             stringaRicevuta = inDalClient.readLine();
-            if (stringaRicevuta.equals("SPEGNI")){
-                ServerThread.attivo = false;
+            if (stringaRicevuta.equals("SPEGNI")){                
+                //ServerThread.attivo = false;
                 MultiServer.SpegniServer();
-                MultiServer.getThread().interrupt();
-                outVersoIlClient.writeBytes(stringaRicevuta + "( => il server si sta spegnendo...)" + "\n");
+                //MultiServer.getThread().interrupt();
+                //outVersoIlClient.writeBytes(stringaRicevuta + "( => il server si sta spegnendo...)" + "\n");
                 break;
             }
             if (stringaRicevuta.equals("FINE")){
@@ -56,5 +57,13 @@ public class ServerThread extends Thread{
 
     public Socket getSocket(){
         return this.client;
+    }
+
+    public void messagioVeloce(){
+        try {
+            outVersoIlClient.writeBytes("spegniti");
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

@@ -13,6 +13,7 @@ public class Client {
     DataOutputStream outVersoIlServer;
     BufferedReader inDalServer;
 
+    AltroAscoltatore ThreadDalServer;
 
     public Socket connetti(){
         try {
@@ -20,16 +21,17 @@ public class Client {
             mioSocket = new Socket(nomeServer, porta);
 
             outVersoIlServer = new DataOutputStream(mioSocket.getOutputStream());
+
             inDalServer = new BufferedReader(new InputStreamReader( mioSocket.getInputStream()));
+            ThreadDalServer = new AltroAscoltatore(inDalServer, Thread.currentThread()); //creo il secondo thread
+            ThreadDalServer.start();// lo avvio
         } catch (Exception e) {
            
             System.out.println("errore durante la comunicazione");
         
         }
-
         return mioSocket;
     } 
-
 
     public void Comunica(){
         String stringaUtente = "";
@@ -50,3 +52,4 @@ public class Client {
         }
     }
 }
+
